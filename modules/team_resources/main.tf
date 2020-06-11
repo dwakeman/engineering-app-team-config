@@ -33,12 +33,13 @@ data "ibm_container_vpc_cluster" "iks_cluster" {
 
 ####  NOTE:  This API does NOT yet work in v1.7.0 of the provider!!!!!
 #            It returns the same ALB error as the provision did.
-/*
+#            **This is fixed in v1.7.1.  And validated here.**
+
 data "ibm_container_vpc_cluster" "ocp_cluster" {
     cluster_name_id = "${var.environment}-ocp-01"
     resource_group_id = data.ibm_resource_group.clusterResourceGroup.id
 }
-*/
+
 
 data "ibm_resource_instance" "event_streams" {
     name = "event-streams-ee-${var.region_name}"
@@ -154,8 +155,8 @@ resource "ibm_iam_access_group_policy" "ocp_cluster_access" {
 
     resources {
         service = "containers-kubernetes"
-#        resource_instance_id = data.ibm_container_vpc_cluster.ocp_cluster.id
-        resource_instance_id = "br6lnind0jlip7t4c670"
+        resource_instance_id = data.ibm_container_vpc_cluster.ocp_cluster.id
+#        resource_instance_id = "br6lnind0jlip7t4c670"
         attributes = {
             "namespace" = "${var.team_name}-dev"
         }
@@ -250,7 +251,7 @@ resource "ibm_iam_access_group_policy" "event_streams_cluster" {
         }
     }
 }
-
+/*
 # Note:  This will NOT work right, as it assumes "stringEquals" for the resource type attribute and 
 #        I need to do "stringMatch" for the wildcard.  It does everything else right, though.
 #        I have asked in Slack.  It can be done via API because the JSON doc format supports it.
@@ -268,6 +269,7 @@ resource "ibm_iam_access_group_policy" "event_streams_group" {
         }
     }
 }
+
 
 # Note:  This will NOT work right, as it assumes "stringEquals" for the resource type attribute and 
 #        I need to do "stringMatch" for the wildcard.  I have asked in Slack.
@@ -291,6 +293,7 @@ resource "ibm_iam_access_group_policy" "event_streams_topic" {
         ]
     }
 }
+*/
 
 #----------------------------------------------------------------------------
 # Grant permission to VPC resources?  VSI? Block Storage?
